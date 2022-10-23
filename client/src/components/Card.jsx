@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from "styled-components"
+import { Link } from 'react-router-dom'
 
 const Container = styled.div`
     width: 360px;
@@ -25,11 +26,13 @@ const ChannelImage = styled.img`
     background-color: #999
 `
 
-const Texts = styled.div``
+const Texts = styled.div`
+    font-weight: bold
+`
 
 const Title = styled.h1`
     font-size: 16px;
-    font-weight: 500;
+    font-weight: bold;
     color: ${({ theme }) => theme.text}
 `
 
@@ -41,22 +44,24 @@ const ChannelName = styled.h2`
 
 const Info = styled.div`
     font-size: 14px;
-    color: ${({ theme }) => theme.textSoft};
+    color: ${({ theme }) => theme.textSoft}; 
 `
 
 const Card = () => {
     return (
-        <Container>
-            <Image src="https://i.imgflip.com/6cfndk.jpg" />
-            <Details>
-                <ChannelImage />
-                <Texts>
-                    <Title>Test Video</Title>
-                    <ChannelName>Bubu</ChannelName>
-                    <Info>qwdqfwef</Info>
-                </Texts>
-            </Details>
-        </Container>
+        <Link to="/video/test" style={{ textDecoration: "none" }}>
+            <Container>
+                <Image src="https://i.imgflip.com/6cfndk.jpg" />
+                <Details>
+                    <ChannelImage src="https://i.imgflip.com/6cfndk.jpg" />
+                    <Texts>
+                        <Title>Test Video</Title>
+                        <ChannelName>Bubu</ChannelName>
+                        <Info>qwdqfwef</Info>
+                    </Texts>
+                </Details>
+            </Container>
+        </Link>
     )
 }
 

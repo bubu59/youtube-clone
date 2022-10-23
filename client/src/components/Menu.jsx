@@ -16,6 +16,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import HelpIcon from '@mui/icons-material/Help';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import FeedIcon from '@mui/icons-material/Feed';
+import { Link } from 'react-router-dom'
 
 const Container = styled.div`
     flex:1;
@@ -79,10 +80,12 @@ const Menu = ({ darkMode, setDarkMode }) => {
     return (
         <Container>
             <Wrapper>
-                <Logo>
-                    <Img src={Youtube} alt="" />
-                    BubuTube
-                </Logo>
+                <Link to="/" style={{ textDecoration: "none" }}>
+                    <Logo>
+                        <Img src={Youtube} alt="" />
+                        BubuTube
+                    </Logo>
+                </Link>
                 <Item>
                     <HomeIcon />
                     Home
@@ -150,7 +153,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
                 </Item>
                 <Item onClick={() => setDarkMode(!darkMode)}>
                     <LightModeIcon />
-                    Light Mode
+                    {darkMode ? "Light" : "Dark"} Mode
                 </Item>
             </Wrapper>
         </Container>
