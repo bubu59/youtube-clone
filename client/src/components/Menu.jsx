@@ -19,10 +19,12 @@ import FeedIcon from '@mui/icons-material/Feed';
 
 const Container = styled.div`
     flex:1;
-    background-color: #202020;
+    background-color: ${({ theme }) => theme.bgLighter};
     height: 100vh;
-    color: white;
-    font-size: 14px
+    color: ${({ theme }) => theme.text};
+    font-size: 14px;
+    position: sticky;
+    top: 0
 `
 
 const Wrapper = styled.div`
@@ -50,10 +52,30 @@ const Item = styled.div`
 `
 const Hr = styled.hr`
     margin: 15px 0px;
-    border: 0.5px solid #373737
+    border: 0.5px solid ${({ theme }) => theme.soft}
+`
+const Login = styled.div`
+
 `
 
-const Menu = () => {
+const Button = styled.button`
+    padding: 5px 15px;
+    background-color: transparent;
+    border: 1px solid #3ea6ff;
+    color: #3ea6ff;
+    border-radius: 3px;
+    margin-top: 10px;
+    cursor: pointer
+`
+
+const Title = styled.h2`
+    font-size: 14px;
+    font-weight: 500;
+    color: #aaaaaa;
+    margin-bottom:20px
+`
+
+const Menu = ({ darkMode, setDarkMode }) => {
     return (
         <Container>
             <Wrapper>
@@ -83,6 +105,12 @@ const Menu = () => {
                     History
                 </Item>
                 <Hr />
+                <Login>
+                    Sign in to like videos, comment and subscribe
+                    <Button>SIGN IN</Button>
+                </Login>
+                <Hr />
+                <Title>Best of BubuTube</Title>
                 <Item>
                     <MusicVideoIcon />
                     Music
@@ -120,7 +148,7 @@ const Menu = () => {
                     <HelpIcon />
                     Help
                 </Item>
-                <Item>
+                <Item onClick={() => setDarkMode(!darkMode)}>
                     <LightModeIcon />
                     Light Mode
                 </Item>
