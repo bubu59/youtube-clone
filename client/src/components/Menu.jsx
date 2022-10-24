@@ -114,7 +114,9 @@ const Menu = ({ darkMode, setDarkMode }) => {
                 <Hr />
                 <Login>
                     Sign in to like videos, comment and subscribe
-                    <Button>SIGN IN</Button>
+                    <Link to="signin" style={{ textDecoration: "none" }}>
+                        <Button>SIGN IN</Button>
+                    </Link>
                 </Login>
                 <Hr />
                 <Title>Best of BubuTube</Title>
