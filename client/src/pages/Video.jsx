@@ -4,6 +4,7 @@ import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined"
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined"
 import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined"
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined"
+import Comments from '../components/Comments'
 
 const Container = styled.div`
     display: flex;
@@ -61,23 +62,47 @@ const Channel = styled.div`
     justify-content: space-between
 `
 
-const ChannelInfo = styled.div``
+const ChannelInfo = styled.div`
+    display: flex;
+    gap: 30px
+`
 
 const Image = styled.img`
     width: 50px;
     height: 50px;
-    border-radius: 1px solid;
+    border-radius: 50%;
 `
 
-const ChannelDetail = styled.div``
+const ChannelDetail = styled.div`
+    display: flex;
+    flex-direction: column;
+    color: ${({ theme }) => theme.text}
+`
 
-const ChannelName = styled.span``
+const ChannelName = styled.span`
+    font-weight: 500;
+`
 
-const ChannelCounter = styled.span``
+const ChannelCounter = styled.span`
+    margin-top: 5px;
+    margin-bottom: 20px;
+    color: ${({ theme }) => theme.textSoft}
+`
 
-const Desc = styled.p``
+const Desc = styled.p`
+    font-weight: bold;
+`
 
-const Subscribe = styled.button``
+const Subscribe = styled.button`
+    background-color: #cc1a00;
+    font-weight: 500;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    height: max-content;
+    padding: 10px 20px;
+    cursor: pointer
+`
 
 const Video = () => {
     return (
@@ -129,6 +154,8 @@ const Video = () => {
                     </ChannelInfo>
                     <Subscribe>SUBSCRIBE</Subscribe>
                 </Channel>
+                <Hr />
+                <Comments />
             </Content>
             <Recommendation>qwdqwwq</Recommendation>
         </Container>
