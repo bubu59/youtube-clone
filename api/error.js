@@ -1,0 +1,1 @@
+export const createError = (status, message)
