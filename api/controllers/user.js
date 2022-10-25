@@ -45,7 +45,7 @@ export const getUser = async (req, res, next) => {
 export const subscribe = async (req, res, next) => {
     try {
         //updating user's subscribed accounts
-        await User.findById(req.user.id, {
+        await User.findByIdAndUpdate(req.user.id, {
             $push: { subscribedUsers: req.params.id }
         })
         //updating count of channel's subscribers
@@ -58,10 +58,10 @@ export const subscribe = async (req, res, next) => {
     }
 }
 
-export const unsuscribe = async (req, res, next) => {
+export const unsubscribe = async (req, res, next) => {
     try {
         //updating user's subscribed accounts
-        await User.findById(req.user.id, {
+        await User.findByIdAndUpdate(req.user.id, {
             $pull: { subscribedUsers: req.params.id }
         })
         //updating count of channel's subscribers
