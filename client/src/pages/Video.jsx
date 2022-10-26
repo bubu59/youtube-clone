@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from "styled-components"
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined"
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined"
@@ -7,6 +7,10 @@ import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined"
 import Comments from '../components/Comments'
 import Card from '../components/Card'
 import { useSelector, useDispatch } from "react-redux"
+import { useLocation } from 'react-router-dom'
+import axios from "axios"
+import { fetchSuccess } from '../redux/videoSlice'
+import { format } from "timeago.js"
 
 const Container = styled.div`
     display: flex;
@@ -108,7 +112,27 @@ const Subscribe = styled.button`
 
 const Video = () => {
     const { currentUser } = useSelector((state) => state.user)
+    const { currentVideo } = useSelector((state) => state.video)
     const dispatch = useDispatch()
+
+    const path = useLocation().pathname.split("/")[2]
+
+    const [channel, setChannel] = useState({})
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const videoRes = await axios.get(`/videos/find/${path}`)
+                const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`)
+
+                setChannel(channelRes.data)
+                dispatch(fetchSuccess(videoRes.data))
+            } catch (err) {
+
+            }
+        }
+        fetchData()
+    }, [path, dispatch])
 
     return (
         <Container>
@@ -124,12 +148,12 @@ const Video = () => {
                         allowfullscreen
                     ></iframe>
                 </VideoWrapper>
-                <Title>Test Video</Title>
+                <Title>{currentVideo.title}</Title>
                 <Details>
-                    <Info>7,454 views * Jun 20, 2020</Info>
+                    <Info>{currentVideo.views} views * {format(currentVideo.createdAt)}</Info>
                     <Buttons>
                         <Button>
-                            <ThumbUpOutlinedIcon /> 123
+                            <ThumbUpOutlinedIcon /> {currentVideo.likes?.length}
                         </Button>
                         <Button>
                             <ThumbDownOffAltOutlinedIcon /> Dislike
@@ -145,15 +169,12 @@ const Video = () => {
                 <Hr />
                 <Channel>
                     <ChannelInfo>
-                        <Image src="https://i.imgflip.com/6cfndk.jpg" />
+                        <Image src={channel.img} />
                         <ChannelDetail>
-                            <ChannelName>Bubu</ChannelName>
-                            <ChannelCounter>200k subscribers</ChannelCounter>
+                            <ChannelName>{channel.name}</ChannelName>
+                            <ChannelCounter>{channel.subscribers} subscribers</ChannelCounter>
                             <Desc>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                Earum voluptates animi sit quos nulla maxime aperiam magni
-                                laboriosam quod consectetur iusto qui saepe assumenda, sun
-                                t nihil deleniti veritatis cum repellendus.
+                                {currentVideo.desc}
                             </Desc>
                         </ChannelDetail>
                     </ChannelInfo>
@@ -162,14 +183,14 @@ const Video = () => {
                 <Hr />
                 <Comments />
             </Content>
-            <Recommendation>
+            {/* <Recommendation>
                 <Card type="sm" />
                 <Card type="sm" />
                 <Card type="sm" />
                 <Card type="sm" />
                 <Card type="sm" />
                 <Card type="sm" />
-            </Recommendation>
+            </Recommendation> */}
         </Container>
     )
 }
