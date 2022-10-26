@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import axios from "axios"
 import { useDispatch } from 'react-redux'
-import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice'
+import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice.js'
 import { auth, provider } from "../firebase.js"
 import { signInWithPopup } from "firebase/auth"
 
@@ -90,7 +90,7 @@ const SignIn = () => {
         dispatch(loginStart())
         signInWithPopup(auth, provider)
             .then((result) => {
-                axios.post("/google/auth", {
+                axios.post("/auth/google", {
                     name: result.user.displayName,
                     email: result.user.email,
                     img: result.user.photoURL,

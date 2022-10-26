@@ -6,6 +6,7 @@ import ReplyOutlinedIcon from "@mui/icons-material/ReplyOutlined"
 import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined"
 import Comments from '../components/Comments'
 import Card from '../components/Card'
+import { useSelector, useDispatch } from "react-redux"
 
 const Container = styled.div`
     display: flex;
@@ -106,6 +107,9 @@ const Subscribe = styled.button`
 `
 
 const Video = () => {
+    const { currentUser } = useSelector((state) => state.user)
+    const dispatch = useDispatch()
+
     return (
         <Container>
             <Content>
