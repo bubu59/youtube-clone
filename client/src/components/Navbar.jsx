@@ -2,6 +2,7 @@ import React from 'react'
 import styled from "styled-components"
 import SearchOutlinedIcon from "@mui/icons-material/Search"
 import { Link } from 'react-router-dom'
+import { useSelector } from "react-redux"
 
 const Container = styled.div`
     position: sticky;
@@ -49,6 +50,8 @@ const Button = styled.button`
 `
 
 const Navbar = () => {
+
+    const { currentUser } = useSelector(state => state.user)
     return (
         <Container>
             <Wrapper>
