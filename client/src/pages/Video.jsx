@@ -9,8 +9,11 @@ import Card from '../components/Card'
 import { useSelector, useDispatch } from "react-redux"
 import { useLocation } from 'react-router-dom'
 import axios from "axios"
-import { fetchFailure, fetchSuccess } from '../redux/videoSlice'
+import { dislike, fetchFailure, fetchSuccess, like } from '../redux/videoSlice'
 import { format } from "timeago.js"
+import ThumbUpIcon from "@mui/icons-material/ThumbUp"
+import ThumbDownIcon from "@mui/icons-material/ThumbDown"
+import { subscription } from '../redux/userSlice'
 
 const Container = styled.div`
     display: flex;
@@ -140,6 +143,23 @@ const Video = () => {
 
     }, [path, dispatch])
 
+    const handleLike = async () => {
+        await axios.put(`/users/like/${currentVideo._id}`)
+        dispatch(like(currentUser._id))
+    }
+
+    const handleDislike = async () => {
+        await axios.put(`/users/dislike/${currentVideo._id}`)
+        dispatch(dislike(currentUser._id))
+    }
+
+    const handleSub = async () => {
+        currentUser.subscriberdUsers.includes(channel._id)
+            ? await axios.put(`/users/unsub/${channel._id}`)
+            : await axios.put(`/users/sub/${channel._id}`)
+        dispatch(subscription(channel._id))
+    }
+
     return (
         <Container>
             <Content>
@@ -158,11 +178,21 @@ const Video = () => {
                 <Details>
                     <Info>{currentVideo.views} views * {format(currentVideo.createdAt)}</Info>
                     <Buttons>
-                        <Button>
-                            <ThumbUpOutlinedIcon /> {currentVideo.likes?.length}
+                        <Button onClick={handleLike}>
+                            {currentVideo.likes?.includes(currentUser._id) ? (
+                                <ThumbUpIcon />
+                            ) : (
+                                <ThumbUpOutlinedIcon />
+                            )}{" "}
+                            {currentVideo.likes?.length}
                         </Button>
-                        <Button>
-                            <ThumbDownOffAltOutlinedIcon /> Dislike
+                        <Button onClick={handleDislike}>
+                            {currentVideo.dislikes?.includes(currentUser._id) ? (
+                                <ThumbDownIcon />
+                            ) : (
+                                <ThumbDownOffAltOutlinedIcon />
+                            )}{" "}
+                            Dislike
                         </Button>
                         <Button>
                             <ReplyOutlinedIcon /> Share
@@ -184,7 +214,11 @@ const Video = () => {
                             </Desc>
                         </ChannelDetail>
                     </ChannelInfo>
-                    <Subscribe>SUBSCRIBE</Subscribe>
+                    <Subscribe onClick={handleSub}>
+                        {currentUser.subscriberdUsers?.includes(channel._id)
+                            ? "SUBSCRIBED"
+                            : "SUBSCRIBE"}
+                    </Subscribe>
                 </Channel>
                 <Hr />
                 <Comments />
