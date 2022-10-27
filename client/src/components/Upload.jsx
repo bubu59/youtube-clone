@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from "styled-components"
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"
+import app from "../firebase.js"
+import { useNavigate } from 'react-router-dom'
+import axios from "axios"
 
 
 const Container = styled.div`
@@ -72,16 +75,23 @@ const Upload = ({ setOpen }) => {
     const [video, setVideo] = useState(undefined)
     const [imgPerc, setImgPerc] = useState(0)
     const [videoPerc, setVideoPerc] = useState(0)
-    const [title, setTitle] = useState("")
-    const [desc, setDesc] = useState("")
+    const [inputs, setInputs] = useState({})
     const [tags, setTags] = useState([])
+
+    const navigate = useNavigate()
+
+    const handleChange = e => {
+        setInputs(prev => {
+            return { ...prev, [e.target.name]: e.target.value }
+        })
+    }
 
     const handleTags = (e) => {
         setTags(e.target.value.split(","))
     }
 
-    const uploadFile = (file) => {
-        const storage = getStorage()
+    const uploadFile = (file, urlType) => {
+        const storage = getStorage(app)
         const FileName = new Date().getTime() + file.name
         const storageRef = ref(storage, FileName)
         const uploadTask = uploadBytesResumable(storageRef, file);
@@ -95,7 +105,7 @@ const Upload = ({ setOpen }) => {
                 // Observe state change events such as progress, pause, and resume
                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
+                urlType === "imgUrl" ? setImgPerc(Math.round(progress)) : setVideoPerc(Math.round(progress))
                 switch (snapshot.state) {
                     case 'paused':
                         console.log('Upload is paused');
@@ -110,32 +120,57 @@ const Upload = ({ setOpen }) => {
             (error) => { },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
+                    setInputs(prev => {
+                        return { ...prev, [urlType]: downloadURL }
+                    })
                 });
             }
         );
 
     }
     useEffect(() => {
-        uploadFile(video)
+        video && uploadFile(video, "videoUrl")
     }, [video])
 
     useEffect(() => {
-        uploadFile(img)
+        img && uploadFile(img, "imgUrl")
     }, [img])
+
+    const handleUpload = async (e) => {
+        e.preventDefault()
+        const res = await axios.post("/videos", { ...inputs, tags })
+        setOpen(false)
+        res.status === 200 && navigate(`/video/${res.data._id}`)
+    }
     return (
         <Container>
             <Wrapper>
                 <Close onClick={() => setOpen(false)}>X</Close>
                 <Title>Upload a new video</Title>
                 <Label>Video:</Label>
-                <Input type="file" accept="video/*" onChange={e => setVideo(e.target.files[0])} />
-                <Input type="text" placeholder="Title" onChange={e => setTitle(e.target.value)} />
-                <Desc placeholder="Description" rows={8} onChange={e => setDesc(e.target.value)} />
+                {videoPerc > 0 ? (
+                    "Uploading" + videoPerc + "%"
+                ) : (
+                    <Input
+                        type="file"
+                        accept="video/*"
+                        onChange={e => setVideo(e.target.files[0])}
+                    />
+                )}
+                <Input type="text" placeholder="Title" name="title" onChange={handleChange} />
+                <Desc placeholder="Description" rows={8} name="desc" onChange={handleChange} />
                 <Input type="text" placeholder="Separate the tags with commas." onChange={handleTags} />
                 <Label>Image:</Label>
-                <Input type="file" accept="image/*" onChange={e => setImg(e.target.files[0])} />
-                <Button>Upload</Button>
+                {imgPerc > 0 ? (
+                    "Uploading" + imgPerc + "%"
+                ) : (
+                    <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={e => setImg(e.target.files[0])}
+                    />
+                )}
+                <Button onClick={handleUpload}>Upload</Button>
             </Wrapper>
         </Container>
     )
