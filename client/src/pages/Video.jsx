@@ -9,7 +9,7 @@ import Card from '../components/Card'
 import { useSelector, useDispatch } from "react-redux"
 import { useLocation } from 'react-router-dom'
 import axios from "axios"
-import { fetchSuccess } from '../redux/videoSlice'
+import { fetchFailure, fetchSuccess } from '../redux/videoSlice'
 import { format } from "timeago.js"
 
 const Container = styled.div`
@@ -113,25 +113,31 @@ const Subscribe = styled.button`
 const Video = () => {
     const { currentUser } = useSelector((state) => state.user)
     const { currentVideo } = useSelector((state) => state.video)
+
     const dispatch = useDispatch()
 
     const path = useLocation().pathname.split("/")[2]
+
+    // console.log(path)
+
 
     const [channel, setChannel] = useState({})
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const videoRes = await axios.get(`/videos/find/${path}`)
-                const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`)
 
-                setChannel(channelRes.data)
-                dispatch(fetchSuccess(videoRes.data))
-            } catch (err) {
+            const videoRes = await axios.get(`/videos/find/${path}`)
+            const channelRes = await axios.get(`/users/find/${videoRes.data.userId}`)
 
-            }
+            // console.log(videoRes)
+            // console.log(channelRes)
+
+            setChannel(channelRes.data)
+            dispatch(fetchSuccess(videoRes.data))
+
         }
         fetchData()
+
     }, [path, dispatch])
 
     return (
@@ -143,9 +149,9 @@ const Video = () => {
                         height="720"
                         src="https://www.youtube.com/embed/k3Vfj-e1Ma4"
                         title="Youtube vidoe player"
-                        frameborder="0"
+                        frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen
+                        allowFullscreen
                     ></iframe>
                 </VideoWrapper>
                 <Title>{currentVideo.title}</Title>
