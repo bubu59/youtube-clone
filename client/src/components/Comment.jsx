@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from "styled-components"
+import axios from "axios"
 
 const Container = styled.div`
     display: flex;
@@ -35,17 +36,24 @@ const Text = styled.span`
 
 
 
-const Comment = () => {
+const Comment = ({ comment }) => {
+    const [channel, setChannel] = useState({})
+
+    useEffect(() => {
+        const fetchComment = async () => {
+            const res = await axios.get(`/users/find/${comment.userId}`)
+            setChannel(res.data)
+        }
+        fetchComment()
+    }, [comment.userId])
+
     return (
         <Container>
-            <Avatar src="https://i.imgflip.com/6cfndk.jpg" />
+            <Avatar src={channel.img} />
             <Details>
-                <Name>John Doe <Date>1 day ago</Date></Name>
+                <Name>{channel.name} <Date>1 day ago</Date></Name>
                 <Text>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Sunt facilis consequuntur voluptatibus facere doloribus, aliquam,
-                    minus sit nisi debitis cumque inventore officia velit odit ipsam
-                    eligendi, minima reprehenderit! Dolore, dolor!
+                    {comment.desc}
                 </Text>
             </Details>
         </Container>
