@@ -18,11 +18,14 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import FeedIcon from '@mui/icons-material/Feed';
 import { Link } from 'react-router-dom'
 import { useSelector } from "react-redux"
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useDispatch } from 'react-redux'
+import { logout } from '../redux/userSlice';
 
 const Container = styled.div`
     flex:1;
     background-color: ${({ theme }) => theme.bgLighter};
-    height: 100vh;
+    height: 100%;
     color: ${({ theme }) => theme.text};
     font-size: 14px;
     position: sticky;
@@ -84,6 +87,13 @@ const Title = styled.h2`
 const Menu = ({ darkMode, setDarkMode }) => {
 
     const { currentUser } = useSelector(state => state.user)
+
+    const dispatch = useDispatch()
+
+    const handleLogout = async (e) => {
+        e.preventDefault()
+        dispatch(logout())
+    }
 
     return (
         <Container>
@@ -170,6 +180,11 @@ const Menu = ({ darkMode, setDarkMode }) => {
                 <Item onClick={() => setDarkMode(!darkMode)}>
                     <LightModeIcon />
                     {darkMode ? "Light" : "Dark"} Mode
+                </Item>
+                <Hr />
+                <Item onClick={handleLogout}>
+                    <LogoutIcon />
+                    Logout
                 </Item>
             </Wrapper>
         </Container>
