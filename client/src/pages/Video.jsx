@@ -174,22 +174,24 @@ const Video = () => {
                 <Details>
                     <Info>{currentVideo.views} views * {format(currentVideo.createdAt)}</Info>
                     <Buttons>
-                        <Button onClick={handleLike}>
-                            {currentVideo.likes?.includes(currentUser._id) ? (
-                                <ThumbUpIcon />
-                            ) : (
-                                <ThumbUpOutlinedIcon />
-                            )}{" "}
-                            {currentVideo.likes?.length}
-                        </Button>
-                        <Button onClick={handleDislike}>
-                            {currentVideo.dislikes?.includes(currentUser._id) ? (
-                                <ThumbDownIcon />
-                            ) : (
-                                <ThumbDownOffAltOutlinedIcon />
-                            )}{" "}
-                            Dislike
-                        </Button>
+                        {currentUser &&
+                            <><Button onClick={handleLike}>
+                                {currentVideo.likes?.includes(currentUser._id) ? (
+                                    <ThumbUpIcon />
+                                ) : (
+                                    <ThumbUpOutlinedIcon />
+                                )}{" "}
+                                {currentVideo.likes?.length}
+                            </Button>
+                                <Button onClick={handleDislike}>
+                                    {currentVideo.dislikes?.includes(currentUser._id) ? (
+                                        <ThumbDownIcon />
+                                    ) : (
+                                        <ThumbDownOffAltOutlinedIcon />
+                                    )}{" "}
+                                    Dislike
+                                </Button>)
+                            </>}
                         <Button>
                             <ReplyOutlinedIcon /> Share
                         </Button>
@@ -210,11 +212,12 @@ const Video = () => {
                             </Desc>
                         </ChannelDetail>
                     </ChannelInfo>
-                    <Subscribe onClick={handleSub}>
-                        {currentUser.subscriberdUsers?.includes(channel._id)
-                            ? "SUBSCRIBED"
-                            : "SUBSCRIBE"}
-                    </Subscribe>
+                    {currentUser &&
+                        <Subscribe onClick={handleSub}>
+                            {currentUser.subscriberdUsers?.includes(channel._id)
+                                ? "SUBSCRIBED"
+                                : "SUBSCRIBE"}
+                        </Subscribe>}
                 </Channel>
                 <Hr />
                 <Comments videoId={currentVideo._id} />

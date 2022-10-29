@@ -16,7 +16,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import HelpIcon from '@mui/icons-material/Help';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import FeedIcon from '@mui/icons-material/Feed';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSelector } from "react-redux"
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useDispatch } from 'react-redux'
@@ -89,6 +89,7 @@ const Menu = ({ darkMode, setDarkMode }) => {
     const { currentUser } = useSelector(state => state.user)
 
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handleLogout = async (e) => {
         e.preventDefault()
