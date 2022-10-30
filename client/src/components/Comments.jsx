@@ -3,6 +3,7 @@ import styled from "styled-components"
 import Comment from './Comment.jsx'
 import axios from "axios"
 import { useSelector } from "react-redux"
+import { useLocation } from 'react-router-dom'
 
 const Container = styled.div``
 
@@ -24,12 +25,20 @@ const Input = styled.input`
     background-color: transparent;
     outline: none;
     padding: 5px;
-    width: 100%
+    width: 100%;
+    color: ${({ theme }) => theme.textSoft}
+`
+const Publish = styled.div`
+    color: ${({ theme }) => theme.textSoft};
+    border: 1 px solid ${({ theme }) => theme.soft};
+    cursor: pointer
 `
 
 const Comments = ({ videoId }) => {
     const { currentUser } = useSelector((state) => state.user)
     const [comments, setComments] = useState([])
+    const [newComment, setNewComment] = useState("")
+    const path = useLocation().pathname.split("/")[2]
 
     useEffect(() => {
         const fetchComments = async () => {
@@ -39,12 +48,21 @@ const Comments = ({ videoId }) => {
         fetchComments()
     }, [videoId])
 
+    const handleSubmit = async () => {
+        try {
+            await axios.post(`/comments`, { desc: newComment, userId: currentUser._id, videoId: path })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <Container>
             {currentUser &&
                 <NewComment>
                     <Avatar src={currentUser.img} />
-                    <Input placeholder='Add a comment..' />
+                    <Input placeholder='Add a comment..' onChange={e => setNewComment(e.target.value)} />
+                    <Publish onClick={handleSubmit}>Publish Comment</Publish>
                 </NewComment>}
             {comments.map(comment => (
                 <Comment key={comment._id} comment={comment} />

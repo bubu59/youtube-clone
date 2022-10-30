@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { loginFailure, loginStart, loginSuccess } from '../redux/userSlice.js'
 import { auth, provider } from "../firebase.js"
 import { signInWithPopup } from "firebase/auth"
+import { getStaticContextFromError } from '@remix-run/router'
 
 const Container = styled.div`
     display: flex;
@@ -103,6 +104,15 @@ const SignIn = () => {
             })
     }
 
+    const handleSignUp = async (e) => {
+        e.preventDefault()
+        try {
+            const res = await axios.post("/auth/signup", { name, email, password })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     return (
         <Container>
             <Wrapper>
@@ -117,7 +127,7 @@ const SignIn = () => {
                 <Input placeholder="username" onChange={e => setName(e.target.value)} />
                 <Input placeholder="email" onChange={e => setEmail(e.target.value)} />
                 <Input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
-                <Button>Sign Up</Button>
+                <Button onClick={handleSignUp}>Sign Up</Button>
             </Wrapper>
             <More>
                 English(USA)
